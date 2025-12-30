@@ -1,0 +1,19 @@
+{{- if and .Values.postgresdb.postgresdbInternal.enabled .Values.postgresdb.postgresdbInternal.objectStore.enabled }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Values.postgresdb.postgresdbInternal.objectStore.name | default (printf "%s-backup-store" (include "gel.postgres.name" .)) }}
+  labels:
+    {{- include "gel.postgres.labels" . | nindent 4 }}
+spec:
+  configuration:
+    {{- toYaml .Values.postgresdb.postgresdbInternal.objectStore.configuration | nindent 4 }}
+  {{- if .Values.postgresdb.postgresdbInternal.objectStore.retentionPolicy }}
+  retentionPolicy: {{ .Values.postgresdb.postgresdbInternal.objectStore.retentionPolicy }}
+  {{- end }}
+  {{- if .Values.postgresdb.postgresdbInternal.objectStore.instanceSidecarConfiguration }}
+  instanceSidecarConfiguration:
+    {{- toYaml .Values.postgresdb.postgresdbInternal.objectStore.instanceSidecarConfiguration | nindent 4 }}
+  {{- end }}
+{{- end }}
+

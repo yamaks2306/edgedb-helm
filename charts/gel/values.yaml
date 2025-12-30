@@ -8,7 +8,7 @@ serviceAccount:
 image:
   pullPolicy: "IfNotPresent"
   repository: geldata/gel
-  tag: 6.5
+  tag: 7.1
 imagePullSecrets: []
 
 autoScaling:
@@ -182,6 +182,78 @@ postgresdb:
 
     pghba:
     - "host all all all scram-sha-256"
+
+    # Barman Cloud Plugin configuration (optional)
+    # Enable this to use the barman-cloud plugin for backups
+    # See: https://cloudnative-pg.io/plugin-barman-cloud/docs/usage/
+    # To enable backups:
+    # 1. Set objectStore.enabled: true and configure it below
+    # 2. Uncomment the plugins section and set barmanObjectName to match objectStore.name
+    plugins: []
+      # - name: barman-cloud.cloudnative-pg.io
+      #   isWALArchiver: true
+      #   parameters:
+      #     barmanObjectName: backup-objectstore
+
+    # ObjectStore configuration for barman-cloud plugin (optional)
+    # This creates the ObjectStore CRD resource required for backups
+    objectStore:
+      enabled: false
+      name: backup-objectstore
+      configuration:
+        destinationPath: "s3://gel-pg-backup"
+        endpointURL: "https://fra1.digitaloceanspaces.com"
+        s3Credentials:
+          accessKeyId:
+            name: backup-storage-creds  # Should match secret.name if secret.create: true
+            key: ACCESS_KEY_ID
+          secretAccessKey:
+            name: backup-storage-creds  # Should match secret.name if secret.create: true
+            key: ACCESS_SECRET_KEY
+        wal:
+          compression: bzip2
+          maxParallel: 8
+      retentionPolicy: "30d"
+      # Secret configuration for S3 credentials
+      # Set secret.create: true to automatically create the secret from values below
+      secret:
+        create: false
+        name: backup-storage-creds
+        accessKeyId: ""
+        secretAccessKey: ""
+      # Optional: configure sidecar resources and behavior
+      instanceSidecarConfiguration: {}
+      #   retentionPolicyIntervalSeconds: 1800
+      #   resources:
+      #     requests:
+      #       memory: "128Mi"
+      #       cpu: "100m"
+      #     limits:
+      #       memory: "256Mi"
+      #       cpu: "200m"
+
+    # ScheduledBackup configuration (optional)
+    # See: https://cloudnative-pg.io/docs/1.28/backup#scheduled-backups
+    scheduledBackup:
+      enabled: false
+      name: ""
+      # Cron schedule format: "seconds minutes hours day-of-month month day-of-week"
+      # Example: "0 0 0 * * *" - daily at midnight (00:00:00)
+      # Example: "0 0 2 * * 0" - weekly on Sunday at 02:00:00
+      schedule: "0 0 0 * * *"
+      # Backup method: plugin (for barman-cloud), volumeSnapshot, or barmanObjectStore (deprecated)
+      method: plugin
+      # Trigger backup immediately when ScheduledBackup is created
+      immediate: false
+      # Suspend scheduled backups temporarily
+      suspend: false
+      # Backup target: prefer-standby (default), primary, or standby
+      target: prefer-standby
+      # Backup owner reference: none, self, or cluster
+      backupOwnerReference: cluster
+      # Plugin configuration (required when method: plugin)
+      pluginConfiguration:
+        name: barman-cloud.cloudnative-pg.io
 
 
 

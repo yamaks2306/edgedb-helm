@@ -1,0 +1,32 @@
+{{- if and .Values.postgresdb.postgresdbInternal.enabled .Values.postgresdb.postgresdbInternal.scheduledBackup.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: {{ .Values.postgresdb.postgresdbInternal.scheduledBackup.name | default (printf "%s-scheduled-backup" (include "gel.postgres.name" .)) }}
+  labels:
+    {{- include "gel.postgres.labels" . | nindent 4 }}
+spec:
+  cluster:
+    name: {{ include "gel.postgres.name" . }}
+  schedule: {{ .Values.postgresdb.postgresdbInternal.scheduledBackup.schedule }}
+  {{- if .Values.postgresdb.postgresdbInternal.scheduledBackup.method }}
+  method: {{ .Values.postgresdb.postgresdbInternal.scheduledBackup.method }}
+  {{- end }}
+  {{- if .Values.postgresdb.postgresdbInternal.scheduledBackup.immediate }}
+  immediate: {{ .Values.postgresdb.postgresdbInternal.scheduledBackup.immediate }}
+  {{- end }}
+  {{- if .Values.postgresdb.postgresdbInternal.scheduledBackup.suspend }}
+  suspend: {{ .Values.postgresdb.postgresdbInternal.scheduledBackup.suspend }}
+  {{- end }}
+  {{- if .Values.postgresdb.postgresdbInternal.scheduledBackup.target }}
+  target: {{ .Values.postgresdb.postgresdbInternal.scheduledBackup.target }}
+  {{- end }}
+  {{- if .Values.postgresdb.postgresdbInternal.scheduledBackup.backupOwnerReference }}
+  backupOwnerReference: {{ .Values.postgresdb.postgresdbInternal.scheduledBackup.backupOwnerReference }}
+  {{- end }}
+  {{- if .Values.postgresdb.postgresdbInternal.scheduledBackup.pluginConfiguration }}
+  pluginConfiguration:
+    {{- toYaml .Values.postgresdb.postgresdbInternal.scheduledBackup.pluginConfiguration | nindent 4 }}
+  {{- end }}
+{{- end }}
+

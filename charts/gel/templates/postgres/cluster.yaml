@@ -35,4 +35,8 @@ spec:
     pg_hba:
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- if .Values.postgresdb.postgresdbInternal.plugins }}
+  plugins:
+    {{- toYaml .Values.postgresdb.postgresdbInternal.plugins | nindent 4 }}
+  {{- end }}
 {{- end }}
