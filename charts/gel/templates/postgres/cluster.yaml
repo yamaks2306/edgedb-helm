@@ -16,6 +16,9 @@ spec:
   stopDelay: {{ .Values.postgresdb.postgresdbInternal.stopDelay }}
   primaryUpdateStrategy: {{ .Values.postgresdb.postgresdbInternal.primaryUpdateStrategy }}
   logLevel: {{ .Values.postgresdb.postgresdbInternal.logLevel }}
+  {{- if .Values.postgresdb.postgresdbInternal.priorityClassName }}
+  priorityClassName: {{ .Values.postgresdb.postgresdbInternal.priorityClassName }}
+  {{- end }}
   bootstrap:
     initdb:
       database: {{ .Values.postgresdb.postgresdbInternal.database | default "gel" }}

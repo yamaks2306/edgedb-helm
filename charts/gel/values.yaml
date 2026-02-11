@@ -114,6 +114,9 @@ affinity: {}
 
 tolerations: []
 
+# Kubernetes PriorityClass name for GEL deployment pods (optional)
+# priorityClassName: ""
+
 gel:
   adminUI: enabled
   auth:
@@ -159,6 +162,9 @@ postgresdb:
     stopDelay: 100
     primaryUpdateStrategy: unsupervised
     logLevel: debug
+
+    # Kubernetes PriorityClass name for cluster pods (optional)
+    # priorityClassName: ""
 
     storage:
       size: 5Gi
