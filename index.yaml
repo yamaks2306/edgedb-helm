@@ -84,6 +84,16 @@ entries:
   gel:
   - apiVersion: v2
     appVersion: "7.1"
+    created: "2026-02-13T14:27:16.340533384Z"
+    description: GEL helm chart
+    digest: 9720d6803761a43c774fc6d1f88f7b07ad2124f3537240935395cc6950f2dfb6
+    name: gel
+    type: application
+    urls:
+    - https://github.com/yamaks2306/edgedb-helm/releases/download/gel-0.3.3/gel-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v2
+    appVersion: "7.1"
     created: "2026-02-13T14:07:45.557285895Z"
     description: GEL helm chart
     digest: 4ff613c408c53010ba000b790ce46e89887286cf3851d02739ab46fffffd714e
@@ -132,4 +142,4 @@ entries:
     urls:
     - https://github.com/yamaks2306/edged-helm/releases/download/gel-0.2.0/gel-0.2.0.tgz
     version: 0.2.0
-generated: "2026-02-13T14:07:45.55731576Z"
+generated: "2026-02-13T14:27:16.340593957Z"
