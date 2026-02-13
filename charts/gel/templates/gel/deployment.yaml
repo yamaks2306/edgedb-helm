@@ -85,8 +85,7 @@ spec:
         volumeMounts:
         {{- if and (not .Values.postgresdb.postgresdbInternal.enabled) (not .Values.postgresdb.postgresdbExternal.enabled) }}
         - name: gel-data
-          mountPath: /var/lib
-          subpath: gel/data
+          mountPath: /var/lib/gel/data
         {{- end }}
         {{- if .Values.tls.enabled }}
         - name: tls-cert
